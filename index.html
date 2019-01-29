@@ -13,6 +13,11 @@
             .green-text {
                 color: green;
             }
+            .is-loading {
+                background-color: gold;
+                color: white;
+                text-shadow: 1px 1px 1px black;
+            }
         </style>
     </head>
 
@@ -37,6 +42,27 @@
             <div>
                 <h2>Here is a use of v-bind</h2>
                 <p :class="green">Testing out v-bind, setting the class to a variable in Vue instance</p>
+                <button :class="{ 'is-loading': isLoading }" @click="toggleClass">Is Loading</button>
+            </div>
+
+            <div>
+                <h2>Expressions inside v-text</h2>
+                <p v-text="new Date()"></p>
+            </div>
+
+            <div>
+                <h2>Computed Properties</h2>
+                <p>{{ reversedMessage }}</p>
+
+                <p>Completed Tasks</p>
+                <ul>
+                    <li v-for="task in tasks" v-if="task.completed" v-text="task.description"></li>
+                </ul>
+
+                <p>Incomplete Tasks</p>
+                <ul>
+                    <li v-for="task in incompleteTasks" v-text="task.description"></li>
+                </ul>
             </div>
 
 
@@ -45,11 +71,6 @@
         <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
 
         <script>
-            /*
-            let data = {
-                message: "Hello World"
-            };
-            */
 
             new Vue({
                 el: "#root",
@@ -57,13 +78,31 @@
                     message: "Hello World",
                     newName: "",
                     names: ['Joe', 'Mary', 'Jane', 'Jack'],
-                    green: 'green-text'
-
+                    green: 'green-text',
+                    isLoading: false,
+                    tasks: [
+                        { description: 'Take out trash', completed: true },
+                        { description: 'Do the dishes', completed: true },
+                        { description: 'Fold laundry', completed: false },
+                        { description: 'Clear to do list', completed: false },
+                        { description: 'Walk dog', completed: true }
+                    ]
+                },
+                computed: {
+                    reversedMessage() {
+                        return this.message.split('').reverse().join('');
+                    },
+                    incompleteTasks() {
+                        return this.tasks.filter(task => task.completed !== true)
+                    }
                 },
                 methods: {
                     addName() {
                         this.names.push(this.newName);
                         this.newName = "";
+                    },
+                    toggleClass() {
+                        this.isLoading == false ? this.isLoading = true : this.isLoading = false;
                     }
                 },
                 mounted() {
