@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Vue - Weather Api</title>
+    </head>
+
+    <body>
+        <div id="root">
+            <label>Latitude</label>
+            <input type="number" name="lon" v-model="lat">
+            <label>Longitude</label>
+            <input type="number" name="lon" v-model="lon">
+            <p>Mean temps for next 16 days in {{ city }}, {{ country }} is {{ mean }} kelvin.</p>
+            <button @click="getTemps">Get Temps</button>
+        </div>
+
+        <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
+
+        <script>
+
+            new Vue({
+                el: "#root",
+                data: {
+                    city: "",
+                    country: "",
+                    mean: 2,
+                    lat: 0,
+                    lon: 0,
+                    url: ''
+                },
+                methods: {
+                    
+                    getTemps() {
+                        let url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + this.lat + '&lon=' + this.lon + '&cnt=16&appid=b3da3c9942f24bac56e8898c51e03757';
+                        fetch(url)
+                        .then(response => response.json())
+                        .then(json => {
+                            let arrLength = json.list.length;
+                            let tempArray = [];
+                            let city = json.city.name;
+                            let country = json.city.country;      
+                            
+                            let i = 0;
+                            for (i = 0; i < arrLength; i++) {
+                                let x = json.list[i].main.temp;
+                                x = Math.floor(x);
+                                tempArray.push(x);
+                            };
+                            
+                            let sum = tempArray.reduce((a, b) => a + b, 0);
+                            let mean = sum / arrLength;
+                            this.mean = mean;
+                            this.city = city;
+                            this.country = country;
+                        })
+                    }
+                }
+            })
+        
+        </script>
+    </body>
+
+</html>
