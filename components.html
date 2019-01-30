@@ -9,6 +9,9 @@
             body {
                 padding-top: 2rem;
             }
+            div {
+                margin: 2rem 0;
+            }
         </style>
     </head>
 
@@ -23,6 +26,20 @@
                 <p>Insert Text Here</p>
             </modal>
             <button @click="showModal = true">Show modal</button>
+
+            <div>
+                <tabs>
+                    <tab name="About Us" :selected="true">
+                        <h1>Here is content for the about us tab.</h1>
+                    </tab>
+                    <tab name="About Our Culture">
+                        <h1>Here is content for the about our culture tab.</h1>
+                    </tab>
+                    <tab name="About Our Vision">
+                        <h1>Here is content for the about our vision tab.</h1>
+                    </tab>
+                </tabs>
+            </div>
 
         </div>
 
