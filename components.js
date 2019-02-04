@@ -1,3 +1,31 @@
+//window.Event = new Vue();
+
+// communicating between components 
+// we're attaching a listener to the window object called Event...???
+window.Event = new class {
+    constructor() {
+        this.vue = new Vue();
+    }
+
+    fire(event, data = null) {
+        this.vue.$emit(event, data);
+    }
+
+    listen(event, callback) {
+        this.vue.$on(event, callback);
+    }
+}
+
+Vue.component('coupon', {
+    template: `<input placeholder="Enter your coupon code" @blur="onCouponApplied">`,
+
+    methods: {
+        onCouponApplied() {
+            Event.$emit('applied');
+        }
+    }
+})
+
 Vue.component('message', {
     props: ['title', 'body'],
     data() {
@@ -114,6 +142,10 @@ Vue.component('tab', {
 new Vue({
     el: '#root',
     data: {
-        showModal: false
+        showModal: false,
+        couponApplied: false
+    },
+    created() {
+        Event.$on('applied', () => alert('Handling it!'));
     }
 })
